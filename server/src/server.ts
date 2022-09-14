@@ -35,7 +35,7 @@ app.get("/games/:id/ads", async (req, res) => {
             id: true,
             name: true,
             weekDays: true,
-            useVoiceCHannel: true,
+            useVoiceChannel: true,
             yearsPlaying: true,
             hourStart: true,
             hourEnd: true
@@ -44,7 +44,7 @@ app.get("/games/:id/ads", async (req, res) => {
             gameId,
         },
         orderBy: {
-            createAt: 'desc'
+            createdAt: 'desc'
         }
     });
     
@@ -88,7 +88,7 @@ app.post("/games/:id/ads", async (req, res) => {
             weekDays: body.weekDays.join(','),
             hourStart: convertHourStringToMinutes(body.hourStart),
             hourEnd: convertHourStringToMinutes(body.hourEnd),
-            useVoiceCHannel: body.useVoiceCHannel,
+            useVoiceChannel: body.useVoiceChannel,
         }
     })
 
