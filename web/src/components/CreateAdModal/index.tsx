@@ -5,6 +5,7 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { Input } from "../Form/Input";
 import { Check, GameController } from "phosphor-react";
 import axios from "axios";
+import { SelectGame } from "../Form/Select";
 
 interface Game {
    id: string;
@@ -61,6 +62,7 @@ export const CreateAdModal = () => {
                      <label className="font-semibold" htmlFor="game">
                         Qual o Game?
                      </label>
+                     <SelectGame />
                      <select
                         id="game"
                         name="game"
