@@ -6,6 +6,9 @@ import "./styles/main.css";
 import logoImg from "./assets/logo.svg";
 import { CreateAdModal } from "./components/CreateAdModal";
 import axios from "axios";
+/* Slider with Keen Slider */
+import "keen-slider/keen-slider.min.css";
+import { useKeenSlider } from "keen-slider/react";
 interface Game {
    id: string;
    title: string;
@@ -17,10 +20,17 @@ interface Game {
 
 function App() {
    const [games, setGames] = useState<Game[]>([]);
+   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+      slides:{
+         perView: 6,
+         spacing: 10,
+      }
+   });
 
    useEffect(() => {
-      axios("http://localhost:3333/games")
-         .then((response) => setGames(response.data));
+      axios("http://localhost:3333/games").then((response) =>
+         setGames(response.data)
+      );
    }, []);
 
    return (
@@ -33,16 +43,17 @@ function App() {
             </span>{" "}
             está aqui.
          </h1>
-         <div className="grid grid-cols-6 gap-6 mt-16">
-            {games.map((game) => (
-               <GameBanner
-                  key={game.id}
-                  bannerUrl={game.bannerUrl}
-                  title={game.title}
-                  adsCount={game._count.ads}
-               />
-            ))}
-         </div>
+            <div ref={sliderRef} className="keen-slider mt-16">
+               {games.map((game, key) => (
+                  <GameBanner
+                     key={game.id}
+                     bannerUrl={game.bannerUrl}
+                     title={game.title}
+                     adsCount={game._count.ads}
+                     index={key + 1}
+                  />
+               ))}
+            </div>
          <Dialog.Root>
             <CreateAdBanner />
             <CreateAdModal />
