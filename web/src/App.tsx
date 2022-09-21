@@ -44,15 +44,18 @@ function App() {
             está aqui.
          </h1>
             <div ref={sliderRef} className="keen-slider mt-16">
-               {games.map((game, key) => (
-                  <GameBanner
-                     key={game.id}
-                     bannerUrl={game.bannerUrl}
-                     title={game.title}
-                     adsCount={game._count.ads}
-                     index={key + 1}
-                  />
-               ))}
+               {
+                  games.length > 0 && 
+                  games.map((game, key) => (
+                     <GameBanner
+                        key={game.id}
+                        bannerUrl={game.bannerUrl}
+                        title={game.title}
+                        adsCount={game._count.ads}
+                        index={key + 1}
+                     />
+                  ))
+               }
             </div>
          <Dialog.Root>
             <CreateAdBanner />

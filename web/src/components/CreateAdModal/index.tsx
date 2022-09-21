@@ -15,6 +15,7 @@ interface Game {
 export const CreateAdModal = () => {
    const [games, setGames] = useState<Game[]>([]);
    const [weekDays, setWeekDays] = useState<string[]>([]);
+   const [gameId, setGameId] = useState("");
    const [useVoiceChannel, setUseVoiceChannel] = useState(false);
 
    useEffect(() => {
@@ -30,7 +31,7 @@ export const CreateAdModal = () => {
       const data = Object.fromEntries(formData);
 
       try {
-         await axios.post(`http://localhost:3333/games/${data.game}/ads`, {
+         await axios.post(`http://localhost:3333/games/${gameId}/ads`, {
             name: data.name,
             yearsPlaying: Number(data.yearsPlaying),
             discord: data.discord,
@@ -62,22 +63,7 @@ export const CreateAdModal = () => {
                      <label className="font-semibold" htmlFor="game">
                         Qual o Game?
                      </label>
-                     <SelectGame />
-                     <select
-                        id="game"
-                        name="game"
-                        className="bg-zinc-900 rounded px-4 py-3 text-sm placeholder:text-zinc-500"
-                        defaultValue=""
-                     >
-                        <option disabled value="">
-                           Selecione o game que deseja jogar
-                        </option>
-                        {games.map((game) => (
-                           <option key={game.id} value={game.id}>
-                              {game.title}
-                           </option>
-                        ))}
-                     </select>
+                     <SelectGame games={games} gameId={gameId} setGameId={setGameId}/>
                   </div>
                   <div className="flex flex-col gap-2">
                      <label htmlFor="name">Seu nome (ou nickname)</label>
