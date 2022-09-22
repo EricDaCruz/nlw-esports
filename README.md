@@ -48,6 +48,22 @@
         </ul>
     </div>
 </div>
+
+## 📌 Updates
+
+### Web
+
+- [ ]  Responsividades
+- [x]  Carrousel nos games (Keen Slider)
+- [x]  Select dos games (Radix)
+- [ ]  Validações (React hook forms - zod)
+- [ ]  Logar com Discord
+- [ ]  Encontrar Duo
+
+### Mobile/Server
+
+- [ ]  Colocar notificações de novos anúncios pelo jogo favorito
+
 <p>👉 <a href="https://www.figma.com/file/r4ClAZfvQGaZC6GIgzgilV/NLW-eSports-(Community)?node-id=0%3A1"> Figma layout </a></p>
 
 
