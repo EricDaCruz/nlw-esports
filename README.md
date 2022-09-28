@@ -9,19 +9,17 @@
     <img src="https://imgur.com/rhqQLzi.png" align="center" />
 </div>
 
-<br />
 
 ## Projeto
 <p>
    O objetivo do NLW eSport é fazer você dar um match com as pessoas que jogam os mesmos jogos que você e que tenham a maior compatibilidade. Foi desenvolvido o backend, frontend e o app mobile. Com esse conjunto você pode publicar anúncios falando o horário e dias disponíveis para jogar, E com isso você achará as pessoas que são compatíveis com você e caso houver um match, você poderá ver o discord da pessoa e adiciona-la.
 </p>
 
-<br />
 
 ## 👨‍💻 Tecnologias
 <div style="display:flex; justify-content:space-between;margin-top:20px">
     <div>
-        <p>🖥 BackEnd</p>
+        <p>🌐 BackEnd</p>
         <ul>
             <li>Typescript</li>
             <li>NodeJS</li>
@@ -50,10 +48,24 @@
         </ul>
     </div>
 </div>
-<br />
+
+## 📌 Updates
+
+### Web
+
+- [ ]  Responsividades
+- [x]  Carrousel nos games (Keen Slider)
+- [x]  Select dos games (Radix)
+- [ ]  Validações (React hook forms - zod)
+- [ ]  Logar com Discord
+- [ ]  Encontrar Duo
+
+### Mobile/Server
+
+- [ ]  Colocar notificações de novos anúncios pelo jogo favorito
+
 <p>👉 <a href="https://www.figma.com/file/r4ClAZfvQGaZC6GIgzgilV/NLW-eSports-(Community)?node-id=0%3A1"> Figma layout </a></p>
 
-<br />
 
 ## ℹ️ Como usar
 <p>Para clonar e usar esta aplicação, você irá precisar de: <a href="https://git-scm.com/">Git</a>, <a href="https://nodejs.org/en/">Node</a> a versão LTS, e o <a href="https://yarnpkg.com/">Yarn</a>.</p>
