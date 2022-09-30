@@ -1,4 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
+import { useForm } from "react-hook-form";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
@@ -17,6 +18,7 @@ export const CreateAdModal = () => {
    const [weekDays, setWeekDays] = useState<string[]>([]);
    const [gameId, setGameId] = useState("");
    const [useVoiceChannel, setUseVoiceChannel] = useState(false);
+   const { register, handleSubmit } = useForm();
 
    useEffect(() => {
       axios("http://localhost:3333/games").then((response) =>
@@ -51,12 +53,12 @@ export const CreateAdModal = () => {
    return (
       <Dialog.Portal>
          <Dialog.Overlay className="bg-black/60 inset-0 fixed flex justify-center items-center">
-            <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px] shadow-black/25">
+            <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white w-[480px] shadow-black/25 rounded-lg sm:max-w-full max-h-screen">
                <Dialog.Title className="text-3xl font-black">
                   Publique um anúncio
                </Dialog.Title>
                <form
-                  onSubmit={handleCreateAd}
+                  onSubmit={handleSubmit((data) => console.log(data))}
                   className="mt-8 flex flex-col gap-4"
                >
                   <div className="flex flex-col gap-2">
@@ -72,17 +74,19 @@ export const CreateAdModal = () => {
                   <div className="flex flex-col gap-2">
                      <label htmlFor="name">Seu nome (ou nickname)</label>
                      <Input
+                        {...register("name")}
                         id="name"
                         name="name"
                         placeholder="Como te chamam dentro do game"
                      />
                   </div>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                      <div className="flex flex-col gap-2">
                         <label htmlFor="yearsPlaying">
                            Joga há quantos anos?
                         </label>
                         <Input
+                           {...register("yearsPlaying")}
                            id="yearsPlaying"
                            name="yearsPlaying"
                            type="number"
@@ -92,6 +96,7 @@ export const CreateAdModal = () => {
                      <div className="flex flex-col gap-2">
                         <label htmlFor="discord">Qual seu Discord?</label>
                         <Input
+                           {...register("discord")}
                            id="discord"
                            name="discord"
                            type="text"
@@ -99,12 +104,12 @@ export const CreateAdModal = () => {
                         />
                      </div>
                   </div>
-                  <div className="flex gap-6">
+                  <div className="flex gap-6 sm:flex-col md:flex-row">
                      <div className="flex flex-col gap-2">
                         <label htmlFor="weekDays">Quando costuma jogar?</label>
                         <ToggleGroup.Root
                            type="multiple"
-                           className="grid grid-cols-4 gap-2"
+                           className="grid gap-2 sm:grid-cols-7 md:grid-cols-4"
                            value={weekDays}
                            onValueChange={setWeekDays}
                         >
@@ -192,12 +197,14 @@ export const CreateAdModal = () => {
                         <label htmlFor="hourStart">Qual horário do dia?</label>
                         <div className="grid grid-cols-2 gap-2">
                            <Input
+                              {...register("hourStart")}
                               name="hourStart"
                               id="hourStart"
                               type="time"
                               placeholder="De"
                            />
                            <Input
+                              {...register("hourEnd")}
                               name="hourEnd"
                               id="hourEnd"
                               type="time"

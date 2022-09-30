@@ -25,6 +25,26 @@ function App() {
          perView: 6,
          spacing: 10,
       },
+      breakpoints: {
+         "(min-width: 320px)": {
+            slides: {
+               perView: 2,
+               spacing: 10,
+            },
+         },
+         "(min-width: 768px)": {
+            slides: {
+               perView: 4,
+               spacing: 10,
+            },
+         },
+         "(min-width: 1024px)": {
+            slides: {
+               perView: 6,
+               spacing: 10,
+            },
+         },
+      },
    });
 
    useEffect(() => {
@@ -34,9 +54,9 @@ function App() {
    }, []);
 
    return (
-      <div className="max-w-[1344px] mx-auto flex-col flex items-center my-20">
-         <img src={logoImg} alt="logo" />
-         <h1 className="text-6xl text-white font-black mt-20">
+      <div className="max-w-[1344px] mx-auto flex-col flex items-center my-20 sm:px-4">
+         <img src={logoImg} alt="logo" className="sm:w-44 md:w-60 lg:w-80" />
+         <h1 className="lg:text-6xl text-white font-black mt-20 sm:text-4xl md:text-5xl">
             Seu{" "}
             <span className="bg-nlw-gradiente text-transparent bg-clip-text">
                duo
