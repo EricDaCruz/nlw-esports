@@ -53,7 +53,7 @@
 
 ### Web
 
-- [ ]  Responsividades
+- [x]  Responsividades
 - [x]  Carrousel nos games (Keen Slider)
 - [x]  Select dos games (Radix)
 - [ ]  Validações (React hook forms - zod)
