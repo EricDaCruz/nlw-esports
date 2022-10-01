@@ -1,11 +1,13 @@
 import { useEffect, useState, FormEvent } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { Input } from "../Form/Input";
 import { Check, GameController } from "phosphor-react";
-import axios from "axios";
 import { SelectGame } from "../Form/Select";
 
 interface Game {
@@ -21,12 +23,38 @@ interface FormData {
    hourEnd: string;
 }
 
+const regexDiscord = new RegExp("^.{3,32}#[0-9]{4}$");
+const regexTime = new RegExp("[0-2][0-9]:[0-5][0-9]");
+
+const FormSchema = z.object({
+   name: z.string().min(1, { message: "Este campo é obrigatório." }),
+   yearsPlaying: z
+      .number()
+      .nonnegative({ message: "Insira um valor maior ou igual a 0" }),
+   discord: z
+      .string()
+      .min(1, { message: "Este campo é obrigatório." })
+      .regex(regexDiscord, { message: "Digite um discord válido." }),
+   hourStart: z.string().min(1, { message: "Este campo é obrigatório." }),
+   hourEnd: z
+      .string()
+      .min(1, { message: "Este campo é obrigatório." })
+});
+
+type FormSchemaType = z.infer<typeof FormSchema>;
+
 export const CreateAdModal = () => {
    const [games, setGames] = useState<Game[]>([]);
    const [weekDays, setWeekDays] = useState<string[]>([]);
    const [gameId, setGameId] = useState("");
    const [useVoiceChannel, setUseVoiceChannel] = useState(false);
-   const { register, handleSubmit } = useForm<FormData>();
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+   } = useForm<FormSchemaType>({
+      resolver: zodResolver(FormSchema),
+   });
 
    useEffect(() => {
       axios("http://localhost:3333/games").then((response) =>
@@ -34,26 +62,25 @@ export const CreateAdModal = () => {
       );
    }, []);
 
-   const handleCreateAd: SubmitHandler<FormData> = async (data) => {
+   const handleCreateAd: SubmitHandler<FormSchemaType> = async (data) => {
+      console.log(data);
+      //   try {
+      //          await axios.post(`http://localhost:3333/games/${gameId}/ads`, {
+      //             name: data.name,
+      //             yearsPlaying: Number(data.yearsPlaying),
+      //             discord: data.discord,
+      //             weekDays: weekDays.map(Number),
+      //             hourStart: data.hourStart,
+      //             hourEnd: data.hourEnd,
+      //             useVoiceChannel: useVoiceChannel,
+      //          });
 
-     try {
-            await axios.post(`http://localhost:3333/games/${gameId}/ads`, {
-               name: data.name,
-               yearsPlaying: Number(data.yearsPlaying),
-               discord: data.discord,
-               weekDays: weekDays.map(Number),
-               hourStart: data.hourStart,
-               hourEnd: data.hourEnd,
-               useVoiceChannel: useVoiceChannel,
-            });
-   
-            alert("Anúncio criado com sucesso!");
-         } catch (err) {
-            console.log(err);
-            alert("Erro ao criar anúncio!");
-         }
-     
-   }
+      //          alert("Anúncio criado com sucesso!");
+      //       } catch (err) {
+      //          console.log(err);
+      //          alert("Erro ao criar anúncio!");
+      //       }
+   };
 
    return (
       <Dialog.Portal>
@@ -65,6 +92,7 @@ export const CreateAdModal = () => {
                <form
                   onSubmit={handleSubmit(handleCreateAd)}
                   className="mt-8 flex flex-col gap-4"
+                  noValidate
                >
                   <div className="flex flex-col gap-2">
                      <label className="font-semibold" htmlFor="game">
@@ -85,28 +113,48 @@ export const CreateAdModal = () => {
                         placeholder="Como te chamam dentro do game"
                      />
                   </div>
+                  {errors.name && (
+                     <span className="text-red-500 text-sm">
+                        {errors.name.message}
+                     </span>
+                  )}
                   <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
-                     <div className="flex flex-col gap-2">
-                        <label htmlFor="yearsPlaying">
-                           Joga há quantos anos?
-                        </label>
-                        <Input
-                           register={register}
-                           id="yearsPlaying"
-                           name="yearsPlaying"
-                           type="number"
-                           placeholder="Tudo bem ser ZERO"
-                        />
+                     <div>
+                        <div className="flex flex-col gap-2">
+                           <label htmlFor="yearsPlaying">
+                              Joga há quantos anos?
+                           </label>
+                           <Input
+                              register={register}
+                              isNumber={true}
+                              id="yearsPlaying"
+                              name="yearsPlaying"
+                              type="number"
+                              placeholder="Tudo bem ser ZERO"
+                           />
+                        </div>
+                        {errors.yearsPlaying && (
+                           <span className="text-red-500 text-sm">
+                              {errors.yearsPlaying.message}
+                           </span>
+                        )}
                      </div>
-                     <div className="flex flex-col gap-2">
-                        <label htmlFor="discord">Qual seu Discord?</label>
-                        <Input
-                           register={register}
-                           id="discord"
-                           name="discord"
-                           type="text"
-                           placeholder="Usuario#0000"
-                        />
+                     <div>
+                        <div className="flex flex-col gap-2">
+                           <label htmlFor="discord">Qual seu Discord?</label>
+                           <Input
+                              register={register}
+                              id="discord"
+                              name="discord"
+                              type="text"
+                              placeholder="Usuario#0000"
+                           />
+                        </div>
+                        {errors.discord && (
+                           <span className="text-red-500 text-sm">
+                              {errors.discord.message}
+                           </span>
+                        )}
                      </div>
                   </div>
                   <div className="flex gap-6 sm:flex-col md:flex-row">
@@ -197,24 +245,37 @@ export const CreateAdModal = () => {
                            </ToggleGroup.Item>
                         </ToggleGroup.Root>
                      </div>
-
                      <div className="flex flex-col gap-2 flex-1">
                         <label htmlFor="hourStart">Qual horário do dia?</label>
                         <div className="grid grid-cols-2 gap-2">
-                           <Input
-                              register={register}
-                              name="hourStart"
-                              id="hourStart"
-                              type="time"
-                              placeholder="De"
-                           />
-                           <Input
-                              register={register}
-                              name="hourEnd"
-                              id="hourEnd"
-                              type="time"
-                              placeholder="Até"
-                           />
+                           <div>
+                              <Input
+                                 register={register}
+                                 name="hourStart"
+                                 id="hourStart"
+                                 type="time"
+                                 placeholder="De"
+                              />
+                              {errors.hourStart && (
+                                 <span className="text-red-500 text-sm">
+                                    {errors.hourStart.message}
+                                 </span>
+                              )}
+                           </div>
+                           <div>
+                              <Input
+                                 register={register}
+                                 name="hourEnd"
+                                 id="hourEnd"
+                                 type="time"
+                                 placeholder="Até"
+                              />
+                              {errors.hourStart && (
+                                 <span className="text-red-500 text-sm">
+                                    {errors.hourStart.message}
+                                 </span>
+                              )}
+                           </div>
                         </div>
                      </div>
                   </div>
