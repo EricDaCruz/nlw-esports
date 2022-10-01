@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
@@ -13,12 +13,20 @@ interface Game {
    title: string;
 }
 
+interface FormData {
+   name: string;
+   yearsPlaying: number;
+   discord: string;
+   hourStart: string;
+   hourEnd: string;
+}
+
 export const CreateAdModal = () => {
    const [games, setGames] = useState<Game[]>([]);
    const [weekDays, setWeekDays] = useState<string[]>([]);
    const [gameId, setGameId] = useState("");
    const [useVoiceChannel, setUseVoiceChannel] = useState(false);
-   const { register, handleSubmit } = useForm();
+   const { register, handleSubmit } = useForm<FormData>();
 
    useEffect(() => {
       axios("http://localhost:3333/games").then((response) =>
@@ -26,28 +34,25 @@ export const CreateAdModal = () => {
       );
    }, []);
 
-   async function handleCreateAd(event: FormEvent) {
-      event.preventDefault();
+   const handleCreateAd: SubmitHandler<FormData> = async (data) => {
 
-      const formData = new FormData(event.target as HTMLFormElement);
-      const data = Object.fromEntries(formData);
-
-      try {
-         await axios.post(`http://localhost:3333/games/${gameId}/ads`, {
-            name: data.name,
-            yearsPlaying: Number(data.yearsPlaying),
-            discord: data.discord,
-            weekDays: weekDays.map(Number),
-            hourStart: data.hourStart,
-            hourEnd: data.hourEnd,
-            useVoiceChannel: useVoiceChannel,
-         });
-
-         alert("Anúncio criado com sucesso!");
-      } catch (err) {
-         console.log(err);
-         alert("Erro ao criar anúncio!");
-      }
+     try {
+            await axios.post(`http://localhost:3333/games/${gameId}/ads`, {
+               name: data.name,
+               yearsPlaying: Number(data.yearsPlaying),
+               discord: data.discord,
+               weekDays: weekDays.map(Number),
+               hourStart: data.hourStart,
+               hourEnd: data.hourEnd,
+               useVoiceChannel: useVoiceChannel,
+            });
+   
+            alert("Anúncio criado com sucesso!");
+         } catch (err) {
+            console.log(err);
+            alert("Erro ao criar anúncio!");
+         }
+     
    }
 
    return (
@@ -58,7 +63,7 @@ export const CreateAdModal = () => {
                   Publique um anúncio
                </Dialog.Title>
                <form
-                  onSubmit={handleSubmit((data) => console.log(data))}
+                  onSubmit={handleSubmit(handleCreateAd)}
                   className="mt-8 flex flex-col gap-4"
                >
                   <div className="flex flex-col gap-2">
@@ -74,7 +79,7 @@ export const CreateAdModal = () => {
                   <div className="flex flex-col gap-2">
                      <label htmlFor="name">Seu nome (ou nickname)</label>
                      <Input
-                        {...register("name")}
+                        register={register}
                         id="name"
                         name="name"
                         placeholder="Como te chamam dentro do game"
@@ -86,7 +91,7 @@ export const CreateAdModal = () => {
                            Joga há quantos anos?
                         </label>
                         <Input
-                           {...register("yearsPlaying")}
+                           register={register}
                            id="yearsPlaying"
                            name="yearsPlaying"
                            type="number"
@@ -96,7 +101,7 @@ export const CreateAdModal = () => {
                      <div className="flex flex-col gap-2">
                         <label htmlFor="discord">Qual seu Discord?</label>
                         <Input
-                           {...register("discord")}
+                           register={register}
                            id="discord"
                            name="discord"
                            type="text"
@@ -197,14 +202,14 @@ export const CreateAdModal = () => {
                         <label htmlFor="hourStart">Qual horário do dia?</label>
                         <div className="grid grid-cols-2 gap-2">
                            <Input
-                              {...register("hourStart")}
+                              register={register}
                               name="hourStart"
                               id="hourStart"
                               type="time"
                               placeholder="De"
                            />
                            <Input
-                              {...register("hourEnd")}
+                              register={register}
                               name="hourEnd"
                               id="hourEnd"
                               type="time"
