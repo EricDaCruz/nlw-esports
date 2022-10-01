@@ -1,8 +1,8 @@
 <div style="text-align: center" align="center">
     <img src="https://imgur.com/TPIEcFI.png" align="center" />
 </div>
-
 <br />
+<h1 style="text-align: center" align="center">🎮 NLW - eSports - Website 🎮</h1>
 <br />
 
 <div style="text-align: center" align="center">
