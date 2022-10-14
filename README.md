@@ -56,7 +56,7 @@
 - [x]  Responsividades
 - [x]  Carrousel nos games (Keen Slider)
 - [x]  Select dos games (Radix)
-- [ ]  Validações (React hook forms - zod)
+- [x]  Validações (React hook forms - zod)
 - [ ]  Logar com Discord
 - [ ]  Encontrar Duo
 
